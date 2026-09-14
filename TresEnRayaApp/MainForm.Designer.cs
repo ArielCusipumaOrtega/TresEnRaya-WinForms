@@ -49,6 +49,8 @@
             btn3 = new Button();
             btn2 = new Button();
             btn1 = new Button();
+            rbVsJugador = new RadioButton();
+            rbContraIA = new RadioButton();
             pnlSuperior.SuspendLayout();
             pnlMarcador.SuspendLayout();
             pnlAcciones.SuspendLayout();
@@ -96,7 +98,7 @@
             pnlMarcador.Controls.Add(lblScoreX);
             pnlMarcador.Location = new Point(45, 395);
             pnlMarcador.Name = "pnlMarcador";
-            pnlMarcador.Size = new Size(350, 45);
+            pnlMarcador.Size = new Size(350, 33);
             pnlMarcador.TabIndex = 2;
             // 
             // lblEmpates
@@ -139,7 +141,7 @@
             pnlAcciones.Controls.Add(btnNuevaPartida);
             pnlAcciones.Location = new Point(45, 455);
             pnlAcciones.Name = "pnlAcciones";
-            pnlAcciones.Size = new Size(350, 60);
+            pnlAcciones.Size = new Size(350, 55);
             pnlAcciones.TabIndex = 3;
             // 
             // btnSalir
@@ -149,9 +151,9 @@
             btnSalir.FlatStyle = FlatStyle.Flat;
             btnSalir.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnSalir.ForeColor = SystemColors.InactiveBorder;
-            btnSalir.Location = new Point(275, 4);
+            btnSalir.Location = new Point(289, 4);
             btnSalir.Name = "btnSalir";
-            btnSalir.Size = new Size(70, 38);
+            btnSalir.Size = new Size(56, 38);
             btnSalir.TabIndex = 2;
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = false;
@@ -162,11 +164,11 @@
             btnReiniciarMarcador.BackColor = Color.MediumSpringGreen;
             btnReiniciarMarcador.Cursor = Cursors.Hand;
             btnReiniciarMarcador.FlatStyle = FlatStyle.Flat;
-            btnReiniciarMarcador.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReiniciarMarcador.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnReiniciarMarcador.ForeColor = SystemColors.MenuText;
-            btnReiniciarMarcador.Location = new Point(139, 3);
+            btnReiniciarMarcador.Location = new Point(127, 4);
             btnReiniciarMarcador.Name = "btnReiniciarMarcador";
-            btnReiniciarMarcador.Size = new Size(130, 38);
+            btnReiniciarMarcador.Size = new Size(156, 38);
             btnReiniciarMarcador.TabIndex = 1;
             btnReiniciarMarcador.Text = "Reiniciar Marcador";
             btnReiniciarMarcador.UseVisualStyleBackColor = false;
@@ -179,9 +181,9 @@
             btnNuevaPartida.FlatStyle = FlatStyle.Flat;
             btnNuevaPartida.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnNuevaPartida.ForeColor = SystemColors.MenuText;
-            btnNuevaPartida.Location = new Point(3, 3);
+            btnNuevaPartida.Location = new Point(0, 4);
             btnNuevaPartida.Name = "btnNuevaPartida";
-            btnNuevaPartida.Size = new Size(130, 38);
+            btnNuevaPartida.Size = new Size(116, 38);
             btnNuevaPartida.TabIndex = 0;
             btnNuevaPartida.Text = "Nueva Partida";
             btnNuevaPartida.UseVisualStyleBackColor = false;
@@ -355,11 +357,37 @@
             btn1.UseVisualStyleBackColor = true;
             btn1.Click += BotonTablero_click;
             // 
+            // rbVsJugador
+            // 
+            rbVsJugador.AutoSize = true;
+            rbVsJugador.Location = new Point(47, 434);
+            rbVsJugador.Name = "rbVsJugador";
+            rbVsJugador.Size = new Size(87, 19);
+            rbVsJugador.TabIndex = 5;
+            rbVsJugador.Text = "2 Jugadores";
+            rbVsJugador.UseVisualStyleBackColor = true;
+            rbVsJugador.CheckedChanged += ModoJuego_CheckedChanged;
+            // 
+            // rbContraIA
+            // 
+            rbContraIA.AutoSize = true;
+            rbContraIA.Checked = true;
+            rbContraIA.Location = new Point(140, 434);
+            rbContraIA.Name = "rbContraIA";
+            rbContraIA.Size = new Size(63, 19);
+            rbContraIA.TabIndex = 6;
+            rbContraIA.TabStop = true;
+            rbContraIA.Text = "Vs la IA";
+            rbContraIA.UseVisualStyleBackColor = true;
+            rbContraIA.CheckedChanged += ModoJuego_CheckedChanged;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(424, 512);
+            Controls.Add(rbContraIA);
+            Controls.Add(rbVsJugador);
             Controls.Add(lblTurno);
             Controls.Add(tlpTablero);
             Controls.Add(pnlAcciones);
@@ -404,5 +432,7 @@
         private Button btnReiniciarMarcador;
         private Button btnSalir;
         private Label lblTresEnRaya;
+        private RadioButton rbVsJugador;
+        private RadioButton rbContraIA;
     }
 }
