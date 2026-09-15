@@ -1,7 +1,7 @@
 # 🎮 Tres en Raya (Tic-Tac-Toe) - WinForms & Minimax AI
 
-![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat&logo=dotnet)
-![C#](https://img.shields.io/badge/C%23-12.0-239120?style=flat&logo=csharp)
+![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat&logo=dotnet)
+![C#](https://img.shields.io/badge/C%23-14-239120?style=flat&logo=csharp)
 ![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat&logo=windows)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
