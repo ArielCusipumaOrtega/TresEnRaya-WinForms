@@ -77,7 +77,6 @@ dotnet run --project TresEnRayaApp
 
 ```text
 TresEnRayaApp/
-├── docs/                   # Capturas de pantalla y documentación
 ├── MainForm.cs             # Lógica del juego, Minimax y eventos
 ├── MainForm.Designer.cs    # Definición de componentes visuales (WinForms)
 ├── MainForm.resx           # Recursos del formulario
