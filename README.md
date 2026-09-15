@@ -51,7 +51,7 @@ El motor de decisión evalúa el tablero virtual asignando puntuaciones a los es
 
 1. Clona el repositorio:
 ```bash
-git clone [https://github.com/TU_USUARIO/TresEnRaya-WinForms.git](https://github.com/TU_USUARIO/TresEnRaya-WinForms.git)
+https://github.com/ArielCusipumaOrtega/TresEnRaya-WinForms.git
 cd TresEnRaya-WinForms
 ```
 
