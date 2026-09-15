@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.IO;
+using System.Media;
 using System.Windows.Forms;
 
 namespace TresEnRayaApp
@@ -8,7 +10,7 @@ namespace TresEnRayaApp
     {
         // Variables de estado
         private bool turnoX = true;          // true = Turno de 'X', false = Turno de 'O'
-        private int turnosJugados = 0;       // Contador de 0 a 9 movimientos
+        private int turnosJugados = 0;       // Contador de movimientos
         private bool juegoTerminado = false; // Bloquea clics tras victoria o empate
 
         // Marcador histórico
@@ -16,10 +18,48 @@ namespace TresEnRayaApp
         private int victoriasO = 0;
         private int totalEmpates = 0;
 
+        // Reproductores de sonido
+        private SoundPlayer? reproductorFicha;
+        private SoundPlayer? reproductorGanar;
+        private SoundPlayer? reproductorEmpate;
+
         public MainForm()
         {
             InitializeComponent();
+            InicializarSonidos();
             ConfigurarInterfazInicial();
+        }
+
+        private void InicializarSonidos()
+        {
+            try
+            {
+                string carpetaMedia = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media");
+
+                string rutaFicha = Path.Combine(carpetaMedia, "chord.wav");
+                string rutaGanar = Path.Combine(carpetaMedia, "tada.wav");
+                string rutaEmpate = Path.Combine(carpetaMedia, "ding.wav");
+
+                if (File.Exists(rutaFicha)) reproductorFicha = new SoundPlayer(rutaFicha);
+                if (File.Exists(rutaGanar)) reproductorGanar = new SoundPlayer(rutaGanar);
+                if (File.Exists(rutaEmpate)) reproductorEmpate = new SoundPlayer(rutaEmpate);
+            }
+            catch
+            {
+                // Previene caídas si el sistema no posee acceso al directorio multimedia
+            }
+        }
+
+        private void ReproducirSonido(SoundPlayer? reproductor)
+        {
+            try
+            {
+                reproductor?.Play();
+            }
+            catch
+            {
+                // Captura defensiva si el dispositivo de audio está ocupado
+            }
         }
 
         private void ConfigurarInterfazInicial()
@@ -30,7 +70,6 @@ namespace TresEnRayaApp
 
         private void BotonTablero_click(object sender, EventArgs e)
         {
-            // Bloquea clics si terminó la ronda o si la IA está por responder
             if (juegoTerminado || (rbContraIA.Checked && !turnoX)) return;
 
             Button? boton = sender as Button;
@@ -38,9 +77,10 @@ namespace TresEnRayaApp
 
             if (turnoX)
             {
-                // Movimiento del Jugador Humano ('X')
                 boton.Text = "X";
                 boton.ForeColor = Color.Black;
+                ReproducirSonido(reproductorFicha); // Sonido al colocar ficha
+
                 lblTurno.Text = rbContraIA.Checked ? "Pensando IA..." : "Turno: Jugador O";
                 lblTurno.ForeColor = Color.Red;
 
@@ -50,8 +90,6 @@ namespace TresEnRayaApp
                 if (!juegoTerminado)
                 {
                     turnoX = false;
-
-                    // Si está activo el modo contra la máquina, ejecuta el algoritmo Minimax
                     if (rbContraIA.Checked)
                     {
                         EjecutarMovimientoIA();
@@ -60,9 +98,10 @@ namespace TresEnRayaApp
             }
             else
             {
-                // Movimiento del Jugador 2 en modo 2 Jugadores ('O')
                 boton.Text = "O";
                 boton.ForeColor = Color.Red;
+                ReproducirSonido(reproductorFicha); // Sonido al colocar ficha
+
                 lblTurno.Text = "Turno: Jugador X";
                 lblTurno.ForeColor = Color.Black;
 
@@ -81,15 +120,12 @@ namespace TresEnRayaApp
             bool hayGanador = false;
             string ganador = "";
 
-            // 1. Filas
             if (ComprobarTrio(btn1, btn2, btn3)) hayGanador = true;
             else if (ComprobarTrio(btn4, btn5, btn6)) hayGanador = true;
             else if (ComprobarTrio(btn7, btn8, btn9)) hayGanador = true;
-            // 2. Columnas
             else if (ComprobarTrio(btn1, btn4, btn7)) hayGanador = true;
             else if (ComprobarTrio(btn2, btn5, btn8)) hayGanador = true;
             else if (ComprobarTrio(btn3, btn6, btn9)) hayGanador = true;
-            // 3. Diagonales
             else if (ComprobarTrio(btn1, btn5, btn9)) hayGanador = true;
             else if (ComprobarTrio(btn3, btn5, btn7)) hayGanador = true;
 
@@ -105,12 +141,13 @@ namespace TresEnRayaApp
                 lblTurno.Text = $"🎉 ¡El Jugador {ganador} ha ganado!";
                 lblTurno.ForeColor = Color.FromArgb(46, 125, 50);
 
+                ReproducirSonido(reproductorGanar); // Sonido festivo al ganar
+
                 MessageBox.Show($"¡Felicitaciones! El Jugador {ganador} es el ganador.",
                                 "Fin de la Partida", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            // Empate: 9 casillas llenas sin combinaciones ganadoras
             if (turnosJugados == 9)
             {
                 juegoTerminado = true;
@@ -118,6 +155,8 @@ namespace TresEnRayaApp
                 ActualizarMarcador();
                 lblTurno.Text = "🤝 ¡Empate! Nadie ha ganado.";
                 lblTurno.ForeColor = Color.FromArgb(108, 117, 125);
+
+                ReproducirSonido(reproductorEmpate); // Sonido neutral al empatar
 
                 MessageBox.Show("¡La partida ha terminado en empate!",
                                 "Empate", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -161,7 +200,7 @@ namespace TresEnRayaApp
             lblEmpates.Text = $"Empates: {totalEmpates}";
         }
 
-        // INTELIGENCIA ARTIFICIAL (ALGORITMO MINIMAX)
+        // LÓGICA MINIMAX
 
         private Button[] ObtenerBotonesTablero()
         {
@@ -178,6 +217,8 @@ namespace TresEnRayaApp
             Button botonElegido = ObtenerBotonesTablero()[mejorIndice];
             botonElegido.Text = "O";
             botonElegido.ForeColor = Color.Red;
+            ReproducirSonido(reproductorFicha); // Sonido al colocar la ficha la máquina
+
             lblTurno.Text = "Turno: Jugador X";
             lblTurno.ForeColor = Color.Black;
 
@@ -225,11 +266,8 @@ namespace TresEnRayaApp
         {
             int evaluacion = EvaluarEstadoVirtual(tablero);
 
-            // 'O' gana: favorece victorias más rápidas restando la profundidad
             if (evaluacion == 10) return evaluacion - profundidad;
-            // 'X' gana: penaliza derrotas más rápidas sumando la profundidad
             if (evaluacion == -10) return evaluacion + profundidad;
-            // Empate
             if (Array.TrueForAll(tablero, celda => !string.IsNullOrEmpty(celda))) return 0;
 
             if (esMaximizador)
@@ -266,9 +304,9 @@ namespace TresEnRayaApp
         {
             int[][] lineas = new int[][]
             {
-                new int[] {0, 1, 2}, new int[] {3, 4, 5}, new int[] {6, 7, 8}, // Filas
-                new int[] {0, 3, 6}, new int[] {1, 4, 7}, new int[] {2, 5, 8}, // Columnas
-                new int[] {0, 4, 8}, new int[] {2, 4, 6}                      // Diagonales
+                new int[] {0, 1, 2}, new int[] {3, 4, 5}, new int[] {6, 7, 8},
+                new int[] {0, 3, 6}, new int[] {1, 4, 7}, new int[] {2, 5, 8},
+                new int[] {0, 4, 8}, new int[] {2, 4, 6}
             };
 
             foreach (var l in lineas)
@@ -282,7 +320,7 @@ namespace TresEnRayaApp
             return 0;
         }
 
-        // EVENTOS DE CONTROLES
+        // EVENTOS DE LA INTERFAZ
 
         private void ModoJuego_CheckedChanged(object sender, EventArgs e)
         {
