@@ -60,14 +60,19 @@ cd TresEnRaya-WinForms
 dotnet build
 ```
 
-3. Ejecuta la aplicación:
+3. Ejecuta las pruebas unitarias:
+```bash
+dotnet test
+```
+
+4. Ejecuta la aplicación:
 ```bash
 dotnet run --project TresEnRayaApp
 ```
 
 ### Opción 2: Desde Visual Studio
 
-1. Abre el archivo de solución `TresEnRayaApp.sln`.
+1. Abre el archivo de solución `TresEnRayaApp.slnx`.
 2. Selecciona la configuración de compilación `Debug` o `Release` en `Any CPU`.
 3. Presiona **F5** o haz clic en **Iniciar**.
 
@@ -75,13 +80,37 @@ dotnet run --project TresEnRayaApp
 
 ## 📂 Estructura del Proyecto
 
+El proyecto sigue una arquitectura desacoplada respetando los principios **SOLID** y el principio de responsabilidad única (**SRP**):
+
 ```text
 TresEnRayaApp/
-├── MainForm.cs             # Lógica del juego, Minimax y eventos
-├── MainForm.Designer.cs    # Definición de componentes visuales (WinForms)
-├── MainForm.resx           # Recursos del formulario
-├── Program.cs              # Punto de entrada de la aplicación
-└── TresEnRayaApp.csproj    # Configuración de compilación y Target Framework
+├── Engine/
+│   ├── GameEvents.cs          # DTOs y argumentos inmutables para eventos del juego
+│   ├── ITicTacToeGame.cs      # Contrato del motor de juego
+│   └── TicTacToeGame.cs       # Coordinador central de reglas, turnos y puntuación
+├── Models/
+│   ├── Board.cs               # Representación matricial 3x3 y validación de victorias
+│   ├── GameMode.cs            # Modos de juego (Humano vs IA, Humano vs Humano)
+│   ├── GameState.cs           # Estados del juego (InProgress, Won, Draw)
+│   ├── Player.cs              # Enumeración fuertemente tipada y extensiones
+│   ├── ScoreCard.cs           # Registro y control histórico del marcador
+│   └── WinLine.cs             # Registro de casillas que forman la línea ganadora
+├── Services/
+│   ├── IAiPlayer.cs           # Contrato de algoritmos de inteligencia artificial
+│   ├── MinimaxAiPlayer.cs     # Implementación pura de Minimax (desacoplada de UI)
+│   ├── ISoundService.cs       # Contrato para reproducción de efectos sonoros
+│   └── SoundService.cs        # Implementación con SoundPlayer y liberación de recursos
+├── MainForm.cs                # Formulario WinForms (Vista puramente reactiva a eventos)
+├── MainForm.Designer.cs       # Componentes visuales y layout
+├── MainForm.resx              # Recursos del formulario
+├── Program.cs                 # Punto de entrada de la aplicación
+└── TresEnRayaApp.csproj       # Configuración de compilación
+
+TresEnRayaApp.Tests/           # Suite de pruebas unitarias (xUnit)
+├── BoardTests.cs              # Pruebas de reglas, casillas y combinaciones de victoria
+├── MinimaxAiPlayerTests.cs    # Pruebas de invencibilidad, bloqueos y búsqueda óptima
+├── TicTacToeGameTests.cs      # Pruebas del flujo de juego, eventos y marcador
+└── TresEnRayaApp.Tests.csproj # Configuración de pruebas unitarias
 ```
 
 ---
@@ -89,3 +118,4 @@ TresEnRayaApp/
 ## 📄 Licencia
 
 Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+
