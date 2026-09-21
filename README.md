@@ -9,9 +9,9 @@ Aplicación de escritorio interactiva del clásico juego **Tres en Raya** constr
 
 ---
 
-## 📸 Captura de Pantalla
+## 🎮 Demostración
 
-<img width="487" height="722" alt="image" src="https://github.com/user-attachments/assets/24fa8f82-0f0f-4a80-96c9-e5d114139c2a" />
+<img width="406" height="664" alt="Tres en Raya - Minimax AI 2026-09-21 16-46-48" src="https://github.com/user-attachments/assets/95ea2448-3e60-4b25-bc86-9689b312d419" />
 
 ---
 
