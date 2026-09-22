@@ -109,31 +109,31 @@ El proyecto se diseñó bajo una arquitectura desacoplada y orientada a eventos,
 ```mermaid
 flowchart TD
     subgraph UI["Capa de Presentación (UI)"]
-        MainForm["MainForm\n(Vista Reactiva WinForms)"]
+        MainForm["MainForm<br/>(Vista Reactiva WinForms)"]
     end
 
     subgraph Core["Capa de Motor y Dominio (Engine & Models)"]
-        ITicTacToeGame["<<interface>>\nITicTacToeGame"]
-        TicTacToeGame["TicTacToeGame\n(Coordinador de Reglas y Turnos)"]
-        Board["Board\n(Matriz 3x3 y Detección de Líneas)"]
-        ScoreCard["ScoreCard\n(Marcador de Sesión)"]
-        Player["Player\n(Enum X, O, None)"]
-        WinLine["WinLine\n(Estructura de Coordenadas)"]
-        GameEvents["GameEvents\n(Eventos Fuertemente Tipados)"]
+        ITicTacToeGame["«interface»<br/>ITicTacToeGame"]
+        TicTacToeGame["TicTacToeGame<br/>(Coordinador de Reglas y Turnos)"]
+        Board["Board<br/>(Matriz 3x3 y Detección de Líneas)"]
+        ScoreCard["ScoreCard<br/>(Marcador de Sesión)"]
+        Player["Player<br/>(Enum X, O, None)"]
+        WinLine["WinLine<br/>(Estructura de Coordenadas)"]
+        GameEvents["GameEvents<br/>(Eventos Fuertemente Tipados)"]
     end
 
     subgraph Services["Capa de Servicios"]
-        IAiPlayer["<<interface>>\nIAiPlayer"]
-        MinimaxAiPlayer["MinimaxAiPlayer\n(Algoritmo Minimax)"]
-        ISoundService["<<interface>>\nISoundService"]
-        SoundService["SoundService\n(Audio Nativo Windows Media)"]
+        IAiPlayer["«interface»<br/>IAiPlayer"]
+        MinimaxAiPlayer["MinimaxAiPlayer<br/>(Algoritmo Minimax)"]
+        ISoundService["«interface»<br/>ISoundService"]
+        SoundService["SoundService<br/>(Audio Nativo Windows Media)"]
     end
 
     MainForm -->|Invoca acciones| ITicTacToeGame
     MainForm -.->|Escucha eventos| GameEvents
     MainForm -->|Reproduce efectos| ISoundService
 
-    ITicTacToeGame <|.. TicTacToeGame
+    TicTacToeGame -.->|Implementa| ITicTacToeGame
     TicTacToeGame --> Board
     TicTacToeGame --> ScoreCard
     TicTacToeGame --> Player
@@ -141,9 +141,9 @@ flowchart TD
     TicTacToeGame -->|Inyecta| IAiPlayer
     TicTacToeGame -.->|Dispara| GameEvents
 
-    IAiPlayer <|.. MinimaxAiPlayer
-    ISoundService <|.. SoundService
-    MinimaxAiPlayer ..> Board
+    MinimaxAiPlayer -.->|Implementa| IAiPlayer
+    SoundService -.->|Implementa| ISoundService
+    MinimaxAiPlayer -.->|Evalúa| Board
 ```
 
 ### Principios SOLID y Desacoplamiento
